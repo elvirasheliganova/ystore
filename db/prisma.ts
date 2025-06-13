@@ -54,11 +54,17 @@ export const prisma = new PrismaClient({ adapter }).$extends({
   result: {
     product: {
       price: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        compute(product: { price: { toString: () => any; }; }) {
-          return product.price.toString();
+        compute(product) {
+          return product.price.toFixed(2); // 👈 
         },
       },
+    //product: {
+      //price: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       // compute(product: { price: { toString: () => any; }; }) {
+    //   return product.price.toString();
+       // },
+      //},
       rating: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         compute(product: { rating: { toString: () => any; }; }) {
