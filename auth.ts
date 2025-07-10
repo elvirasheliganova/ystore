@@ -99,8 +99,6 @@ export const config = {
       }
     }
   
-       
-
         if(user.name === 'NO_NAME') {
           token.name = user.email.split('@')[0]
 
@@ -111,6 +109,11 @@ export const config = {
           })
         }
       }
+      //Handle session updates
+      if(session?.user.name && trigger === 'update'){
+        token.name = session.user.name
+      }
+
       return token
     },
 
