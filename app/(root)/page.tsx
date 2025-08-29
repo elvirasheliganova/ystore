@@ -1,20 +1,30 @@
 
+import { ProductCarousel } from "@/components/shared/product/product-carousel";
 import ProductList from "@/components/shared/product/product-list";
-import {getLatestProducts} from "@/lib/actions/product.actions";
+import ViewAllProductButton from "@/components/view-all-products-button";
+import {getFeaturedProducts, getLatestProducts} from "@/lib/actions/product.actions";
  
 const Homepage = async () => {
  
-  const latestProducts = await getLatestProducts()
- 
-  return <>
+  const latestProducts = await getLatestProducts();
+  const featuredProducts = await getFeaturedProducts();
 
-    <ProductList 
-    data={latestProducts} 
-    title='Newest Arrivals'
-    limit={4}
-    />
-   
-    </>;
+  
+ 
+  return (
+    
+    <>
+    
+      {featuredProducts.length > 0 && <ProductCarousel data= {featuredProducts} />}
+    
+      <ProductList 
+      data={latestProducts} 
+      title='Newest Arrivals'
+      limit={4}
+      />
+      <ViewAllProductButton />
+   </>)
+    
 }
  
 export default Homepage;

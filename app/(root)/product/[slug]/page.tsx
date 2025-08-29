@@ -7,6 +7,8 @@ import { notFound } from "next/navigation"
 import ProductImages from '@/components/shared/product/product-images';
 import AddToCart from '@/components/shared/product/add-to-cart';
 import { getMyCart } from '@/lib/actions/cart.actions';
+import ReviewList from './review-list';
+import { auth } from 'auth';
 
 
 // const ProductDetailsPage = async (props: {
@@ -87,7 +89,9 @@ const ProductDetailsPage = async (props: {
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const cart = await getMyCart()
+  const cart = await getMyCart();
+  const session = await auth();
+  const userId = session?.user.id
 
   return (
     <>
@@ -157,6 +161,10 @@ const ProductDetailsPage = async (props: {
             </Card>
           </div>
         </div>
+      </section>
+      <section>
+        <h2 className="h2-bold mb-5">Customer Reviews</h2>
+        <ReviewList userId={userId || ''} productid={product.id} productSlug={product.slug}     />
       </section>
     </>
   );

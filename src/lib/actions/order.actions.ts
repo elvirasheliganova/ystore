@@ -171,7 +171,7 @@ export async function approvePaypalOrder(
 ) {
   try {
 
-     //Get order from dstabase
+     //Get order from database
      const order = await prisma.order.findFirst({
       where:{
         id: orderId
@@ -213,7 +213,7 @@ export async function approvePaypalOrder(
 
 //Update order in database to paid
 
-async function updateOrderToPaid( {
+export async function updateOrderToPaid( {
   orderId, paymentResult
 }: {
   orderId: string,

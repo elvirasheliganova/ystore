@@ -27,15 +27,18 @@ import {
   approvePaypalOrder, 
   updateOrderToPaidByCOD, 
   deliverOrder } from '@/lib/actions/order.actions';
+import StripePayment from './stripe-payment';
 
 const OrderDetailsTable = ({
   order, 
   paypalClientId,
-  isAdmin
+  isAdmin,
+  stripeClientSecret
 }: {
   order: Order; 
   paypalClientId: string;
-  isAdmin: boolean
+  isAdmin: boolean;
+  stripeClientSecret: string | null
 }) => {
   const {
     shippingAddress,
@@ -132,9 +135,10 @@ const MarkAsDeliveredButton = () => {
   return (
     <>
     <h1 className="py-4 text-2xl">Order {formatId(order.id)}</h1>
-    <div className="grid md:grid-cols-3 md:gap-5">
-      <div className="overflow-x-auto md:col-span-2">Content</div>
-      <Card>
+    <div className="grid md:grid-cols-3 md:gap-5 ">
+      <div className="overflow-x-auto md:col-span-2 space-y-4">
+        
+           <Card>
         <CardContent className='p-4 gap-4'>
           <h2 className="text-xl pb-4">Payment Method</h2>
           <p>{paymentMethod}</p>
@@ -196,8 +200,10 @@ const MarkAsDeliveredButton = () => {
       </TableBody>
     </Table>
   </CardContent>
-</Card>
+      </Card>
     </div>
+     
+   
     <div>
   <Card>
     <CardContent className='p-4 space-y-4 gap-4'>
@@ -221,7 +227,7 @@ const MarkAsDeliveredButton = () => {
 
       {/*Paypal payment*/}
       {!isPaid && 
-     //paymentMethod === 'PayPal'&&
+     paymentMethod === 'PayPal'&&
        (
        <div>
           <PayPalScriptProvider options={{clientId: paypalClientId}}>
@@ -233,6 +239,13 @@ const MarkAsDeliveredButton = () => {
         </div>
         )
       }
+      {/* Stripe Payment */}
+      {!isPaid  && paymentMethod === 'Stripe' && stripeClientSecret &&
+       <StripePayment 
+      priceInCents={Number(order.totalPrice) * 100}
+      orderId={order.id}
+      clientSecret={stripeClientSecret}
+      />}
       {/* Cash on Delivery*/}
       {
         isAdmin && !isPaid && paymentMethod === 'CashOnDelivery' && (
@@ -247,6 +260,7 @@ const MarkAsDeliveredButton = () => {
     </CardContent>
   </Card>
 </div>
+ </div>
     </>
   )
 }
